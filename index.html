@@ -110,6 +110,15 @@ dialog input,dialog select{border-radius:12px}
 @media(max-width:899px){header{padding:13px 14px 10px}main{padding:14px}.toolbar{padding:10px;margin-bottom:14px}.toolbar select{flex:1 1 130px}.toolbar .toolbtn{flex:1 1 auto}.results-note{width:100%}.rec{padding:17px}.board{gap:12px}}
 @media(max-width:480px){h1{font-size:1rem}.toolbar{gap:8px}.search-wrap{flex-basis:100%;min-width:0}.toolbar select{min-width:0;flex:1}.toolbar .toolbtn{padding:8px 10px;font-size:.82rem}.rec h2{font-size:1.2rem}.card{padding-left:12px}.meta{gap:5px}}
 
+
+.auth-area{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:290px}
+.sync-status{font-size:.72rem;color:var(--mu);white-space:nowrap}
+.sync-status::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#d97706;margin-right:6px}
+.sync-status[data-state="synced"]::before{background:#16a34a}
+.sync-status[data-state="error"]::before{background:#dc2626}
+.auth-btn{font-size:.78rem;padding:8px 12px;min-height:38px;white-space:nowrap}
+@media(max-width:899px){.auth-area{max-width:none;gap:5px}.sync-status{font-size:.68rem}.auth-btn{font-size:.72rem;padding:7px 9px;min-height:36px}}
+@media(max-width:480px){.auth-area{flex-basis:100%;justify-content:flex-end;margin-top:4px}.top{flex-wrap:wrap}.top h1{flex:1 1 55%}.auth-area{order:5}}
 </style>
 </head>
 <body>
@@ -119,6 +128,11 @@ dialog input,dialog select{border-radius:12px}
     <button class="btn hide-m" id="add">+ Add task</button>
     <button class="ghost" id="palBtn" aria-label="Open theme panel">🎨</button>
     <button class="ghost" id="theme" aria-label="Switch light or dark theme">🌓</button>
+    <div class="auth-area" id="authArea">
+      <span class="sync-status" id="syncStatus" role="status">Local only</span>
+      <button class="btn auth-btn" id="signInBtn" type="button">Sign in with Google</button>
+      <button class="ghost auth-btn" id="signOutBtn" type="button" hidden>Sign out</button>
+    </div>
   </div>
   <div class="stats"><span id="st">0 of 0 done today</span><div class="bar"><i id="pb"></i></div></div>
   <nav class="tabs" aria-label="Columns">
@@ -196,6 +210,9 @@ dialog input,dialog select{border-radius:12px}
 </dialog>
 <div id="toast" role="status"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 "use strict";
 const K="tm.tasks", TK="tm.theme", PK="tm.palette", RK="tm.rgb";
@@ -221,8 +238,23 @@ const $=id=>document.getElementById(id);
 let tasks=load(),editId=null,toastTimer=null,paletteIndex=0,rgb={r:30,g:58,b:138},rgb2={r:103,g:85,b:201};
 let searchQuery="",categoryFilter="all",sortMode="smart";
 
-function load(){try{const a=JSON.parse(localStorage.getItem(K)||"[]");return Array.isArray(a)?a.filter(t=>t&&t.id&&typeof t.title==="string").map(t=>({...t,priority:PR[t.priority]===undefined?"Medium":t.priority,category:CATEGORIES[t.category]?t.category:"other",dueDate:typeof t.dueDate==="string"?t.dueDate:"",done:!!t.done,createdAt:Number(t.createdAt)||Date.now(),completedAt:Number(t.completedAt)||null})):[]}catch(e){return[]}}
-function save(){try{localStorage.setItem(K,JSON.stringify(tasks));return true}catch(e){toast("Unable to save tasks in browser storage.");return false}}
+function normalizeTask(t){return {id:String(t.id||uid()),title:String(t.title||"").trim().slice(0,100),priority:PR[t.priority]===undefined?"Medium":t.priority,category:CATEGORIES[t.category]?t.category:"other",dueDate:typeof t.dueDate==="string"?t.dueDate:"",done:!!t.done,createdAt:Number(t.createdAt)||Date.now(),completedAt:Number(t.completedAt)||null}}
+function load(){try{const a=JSON.parse(localStorage.getItem(K)||"[]");return Array.isArray(a)?a.filter(t=>t&&t.id&&typeof t.title==="string").map(normalizeTask):[]}catch(e){return[]}}
+let firebaseApp=null,auth=null,db=null,currentUser=null,unsubscribeTasks=null,cloudReady=false,cloudApplying=false;
+let lastCloudTasks=new Map(),syncQueue=Promise.resolve();
+const firebaseConfig={apiKey:"PASTE_YOUR_FIREBASE_API_KEY",authDomain:"YOUR_PROJECT_ID.firebaseapp.com",projectId:"YOUR_PROJECT_ID",appId:"PASTE_YOUR_FIREBASE_APP_ID"};
+function firebaseIsConfigured(){return !!firebaseConfig.apiKey&&!firebaseConfig.apiKey.includes("PASTE_")&&!!firebaseConfig.appId&&!firebaseConfig.appId.includes("PASTE_")&&!!firebaseConfig.projectId&&!firebaseConfig.projectId.includes("YOUR_")&&!!firebaseConfig.authDomain&&!firebaseConfig.authDomain.includes("YOUR_")}
+function updateSyncStatus(text,state="local"){const node=$("syncStatus");node.textContent=text;node.dataset.state=state}
+function updateAuthUi(){const signedIn=!!currentUser;$("signInBtn").hidden=signedIn;$("signOutBtn").hidden=!signedIn;if(signedIn)updateSyncStatus(cloudReady?"Synced · "+(currentUser.displayName||currentUser.email||"Google account"):"Connecting…",cloudReady?"synced":"local");else if(!firebaseIsConfigured())updateSyncStatus("Setup required","error");else updateSyncStatus("Not signed in","local")}
+function save(){try{localStorage.setItem(K,JSON.stringify(tasks));if(currentUser&&cloudReady&&!cloudApplying){const uid=currentUser.uid;syncQueue=syncQueue.then(()=>syncCloudDiff(uid)).catch(err=>{console.error("Firestore sync failed",err);updateSyncStatus("Sync error","error");toast("Cloud sync failed. Check your connection and Firebase setup.")})}return true}catch(e){toast("Unable to save tasks in browser storage.");return false}}
+function cloudTaskData(t){return {title:t.title,priority:t.priority,category:t.category,dueDate:t.dueDate||"",done:!!t.done,createdAt:Number(t.createdAt)||Date.now(),completedAt:Number(t.completedAt)||null,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}}
+function tasksRef(uid){return db.collection("users").doc(uid).collection("tasks")}
+async function syncCloudDiff(uid){if(!currentUser||currentUser.uid!==uid||!cloudReady||!db)return;const desired=new Map(tasks.map(t=>[String(t.id),normalizeTask(t)]));const ref=tasksRef(uid);const batch=db.batch();let writes=0;for(const [id,t] of desired){const previous=lastCloudTasks.get(id);if(!previous||JSON.stringify(previous)!==JSON.stringify(t)){batch.set(ref.doc(id),cloudTaskData(t));writes++}}for(const id of lastCloudTasks.keys()){if(!desired.has(id)){batch.delete(ref.doc(id));writes++}}if(!writes)return;await batch.commit()}
+async function migrateLocalTasksOnce(user){const marker="tm.firebaseMigrated."+user.uid;if(localStorage.getItem(marker)==="1")return;const ref=tasksRef(user.uid);const snap=await ref.get();const remoteIds=new Set(snap.docs.map(d=>d.id));const local=tasks.map(normalizeTask).filter(t=>!remoteIds.has(t.id));for(let i=0;i<local.length;i+=400){const batch=db.batch();local.slice(i,i+400).forEach(t=>batch.set(ref.doc(t.id),cloudTaskData(t)));await batch.commit()}localStorage.setItem(marker,"1")}
+async function connectUser(user){if(unsubscribeTasks){unsubscribeTasks();unsubscribeTasks=null}currentUser=user;cloudReady=false;lastCloudTasks=new Map();updateAuthUi();try{await migrateLocalTasksOnce(user);if(!currentUser||currentUser.uid!==user.uid)return;unsubscribeTasks=tasksRef(user.uid).onSnapshot(snapshot=>{if(!currentUser||currentUser.uid!==user.uid)return;const remote=snapshot.docs.map(d=>normalizeTask({...d.data(),id:d.id}));cloudApplying=true;tasks=remote;lastCloudTasks=new Map(remote.map(t=>[t.id,t]));try{localStorage.setItem(K,JSON.stringify(tasks))}catch(e){}cloudReady=true;render();cloudApplying=false;updateSyncStatus("Synced · "+(user.displayName||user.email||"Google account"),"synced")},err=>{console.error("Firestore listener failed",err);cloudReady=false;updateSyncStatus("Sync error","error");toast("Could not read cloud tasks. Check Firestore rules.")})}catch(err){console.error("Firebase connection failed",err);cloudReady=false;updateSyncStatus("Connection error","error");toast("Firebase setup or connection failed. Check the setup guide and console.")}}
+async function signInGoogle(){if(!firebaseIsConfigured()){updateSyncStatus("Setup required","error");toast("Add your Firebase web config to this HTML file first.");return}try{const provider=new firebase.auth.GoogleAuthProvider();provider.setCustomParameters({prompt:"select_account"});await auth.signInWithPopup(provider)}catch(err){if(err&&["auth/popup-blocked","auth/operation-not-supported-in-this-environment"].includes(err.code)){try{await auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider())}catch(e){console.error(e);toast("Google sign-in failed: "+(e.message||e.code))}}else{console.error(err);toast("Google sign-in failed: "+(err.message||err.code||"unknown error"))}}}
+async function signOutGoogle(){if(!auth)return;try{await auth.signOut()}catch(err){console.error(err);toast("Could not sign out")}}
+function initializeFirebase(){if(!firebaseIsConfigured()){updateAuthUi();return}try{firebaseApp=firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.firestore();auth.onAuthStateChanged(user=>{if(user){connectUser(user)}else{const hadUser=!!currentUser;if(unsubscribeTasks){unsubscribeTasks();unsubscribeTasks=null}currentUser=null;cloudReady=false;lastCloudTasks=new Map();updateAuthUi();if(hadUser){tasks=[];try{localStorage.setItem(K,"[]")}catch(e){}render();toast("Signed out")}}})}catch(err){console.error("Firebase initialization failed",err);updateSyncStatus("Firebase error","error")}}
 function pad(n){return String(n).padStart(2,"0")}
 function ymd(d=new Date()){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
 function uid(){return crypto&&crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random()}
@@ -334,6 +366,7 @@ function switchTab(tab){document.querySelectorAll(".tabs button").forEach(b=>b.c
 function openTheme(){if(!$("pal").open)$("pal").showModal()}
 function closeTheme(){$("pal").close()}
 
+$("signInBtn").addEventListener("click",signInGoogle);$("signOutBtn").addEventListener("click",signOutGoogle);
 $("add").addEventListener("click",()=>openDialog());$("fab").addEventListener("click",()=>openDialog());$("cx").addEventListener("click",closeDialog);$("f").addEventListener("submit",submitTask);$("clr").addEventListener("click",clearCompleted);
 $("theme").addEventListener("click",()=>applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));$("palBtn").addEventListener("click",openTheme);$("palX").addEventListener("click",closeTheme);$("palR").addEventListener("click",()=>{paletteIndex=0;rgb=hexToRgb(PALETTES[0].a);rgb2=hexToRgb(PALETTES[0].b);applyPalette(PALETTES[0].a,PALETTES[0].b);buildSliders();updateSwatchSelection();setRgbGlow(false);applyTheme("light");toast("Theme reset")});$("rgbT").addEventListener("change",e=>setRgbGlow(e.target.checked));
 document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.t)));
@@ -380,6 +413,7 @@ document.addEventListener("keydown",e=>{
 makePaletteButtons();buildSliders();
 try{const theme=localStorage.getItem(TK);applyTheme(theme==="dark"?"dark":"light",false);const p=JSON.parse(localStorage.getItem(PK)||"null");if(p&&/^#[0-9a-f]{6}$/i.test(p.a)&&/^#[0-9a-f]{6}$/i.test(p.b)){applyPalette(p.a,p.b,false);rgb=hexToRgb(p.a);rgb2=hexToRgb(p.b);buildSliders();const i=PALETTES.findIndex(x=>x.a.toLowerCase()===p.a.toLowerCase()&&x.b.toLowerCase()===p.b.toLowerCase());paletteIndex=i;updateSwatchSelection()}setRgbGlow(localStorage.getItem("tm.rgbGlow")==="1",false)}catch(e){applyTheme("light",false)}
 render();
+initializeFirebase();
 </script>
 </body>
 </html>
