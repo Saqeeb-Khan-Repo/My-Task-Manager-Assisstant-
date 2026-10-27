@@ -20,7 +20,11 @@ h1::before{content:"";grid-row:span 2;width:42px;height:42px;border-radius:13px;
 h1 small{display:block;font-family:"Plus Jakarta Sans",system-ui,sans-serif;margin-top:4px;letter-spacing:0;font-size:.8rem;font-weight:400;color:var(--mu)}
 .btn{background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on);border:0;border-radius:12px;padding:10px 18px;font-weight:600;min-height:44px;box-shadow:0 6px 16px -6px var(--ac);transition:filter .2s}
 .btn:hover{filter:brightness(1.08)}.ghost{background:transparent;border:1px solid var(--bd);color:var(--tx);border-radius:10px;min-height:44px;min-width:44px}
-.stats{max-width:1200px;margin:10px auto 0;display:flex;align-items:center;gap:14px;font-size:.85rem;color:var(--mu)}.bar{flex:1;height:8px;background:var(--bd);border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ok),#34d399);transition:width .4s}
+.stats{max-width:1200px;margin:10px auto 0;display:flex;align-items:center;gap:14px;font-size:.85rem;color:var(--mu)}
+.rgb-eq{display:none;align-items:flex-end;gap:4px;height:22px;margin:9px auto 0;max-width:1200px;padding:0 2px;overflow:hidden;opacity:.9}
+.rgb-eq span{display:block;flex:1;min-width:3px;height:5px;border-radius:999px;background:linear-gradient(180deg,#fff,#22d3ee 28%,#8b5cf6 65%,#f43f5e);box-shadow:0 0 8px currentColor;animation:eqbounce .72s ease-in-out infinite alternate;transform-origin:bottom}
+.rgb-eq span:nth-child(7n+1){animation-duration:.48s}.rgb-eq span:nth-child(7n+2){animation-duration:.83s}.rgb-eq span:nth-child(7n+3){animation-duration:.61s}.rgb-eq span:nth-child(7n+4){animation-duration:1.02s}.rgb-eq span:nth-child(7n+5){animation-duration:.55s}.rgb-eq span:nth-child(7n+6){animation-duration:.92s}
+@keyframes eqbounce{from{height:3px;opacity:.55}to{height:22px;opacity:1}}.bar{flex:1;height:8px;background:var(--bd);border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ok),#34d399);transition:width .4s}
 .tabs{display:none;max-width:1200px;margin:10px auto 0;gap:6px}.tabs button{flex:1;border:1px solid var(--bd);background:var(--card);border-radius:999px;padding:8px 4px;min-height:44px;font-size:.9rem}.tabs button.on{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:var(--on)}
 main{flex:1;display:flex;flex-direction:column;width:100%;min-height:0;max-width:1200px;margin:0 auto;padding:16px}
 .rec{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;padding:18px 20px;border:1px solid var(--bd);border-radius:20px;background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 9%,var(--card)),var(--card));box-shadow:var(--sh)}
@@ -44,6 +48,7 @@ dialog{border:1px solid var(--bd);border-radius:22px;background:var(--card);colo
 label{display:block;font-size:.85rem;color:var(--mu);margin-top:12px}dialog input,dialog select{width:100%;border:1px solid var(--bd);background:var(--bg);border-radius:10px;padding:10px 12px;min-height:44px;margin-top:4px}
 .err{color:var(--bad);min-height:1.3em;margin:8px 0 0;font-size:.9rem}.row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}.fab{display:none;position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:50%;font-size:1.8rem;padding:0;box-shadow:0 4px 14px rgba(0,0,0,.3);z-index:6}
 #toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}#toast.show{opacity:1}
+@media(prefers-reduced-motion:reduce){html.rgb *,html.rgb *::before,html.rgb *::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 @media(max-width:899px){.board{display:flex}.col{display:none}.col.on{display:flex;flex:1;min-width:0}.tabs{display:flex}.fab{display:block}.hide-m{display:none}.list{padding-bottom:88px}#toast{bottom:auto;top:calc(12px + env(safe-area-inset-top,0px))}.rec{flex-wrap:wrap}h1{font-size:1.1rem;min-width:0}}
 @media(min-width:600px) and (max-width:899px){.board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.col{display:flex}.col.c{grid-column:1/-1}.tabs{display:none}.fab{display:none}.hide-m{display:inline-block}.list{padding-bottom:14px}h1{font-size:1.3rem}#toast{top:auto;bottom:calc(24px + env(safe-area-inset-bottom,0px))}}
 @media(max-width:480px){header{padding:12px}.top{gap:8px}h1{font-size:1rem;line-height:1.15}h1::before{width:36px;height:36px;border-radius:11px}main{padding:12px}.rec{padding:14px}.stats{font-size:.8rem}.col>h2{padding:14px}.list{padding-left:12px;padding-right:12px}.tabs button{font-size:.82rem;padding:6px 2px}}
@@ -59,7 +64,14 @@ dialog.drawer[open]{animation:drin .25s ease-out}@keyframes drin{from{opacity:0;
 .rg.R{background:linear-gradient(90deg,#000,#f00)}.rg.G{background:linear-gradient(90deg,#000,#0f0)}.rg.B{background:linear-gradient(90deg,#000,#00f)}
 .rg::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid #334155;box-shadow:0 2px 6px rgba(0,0,0,.3)}.rg::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #334155}
 .tg{display:flex;align-items:center;gap:10px;margin-top:20px;color:var(--tx);font-size:.9rem}.tg input{width:auto;min-height:0;margin:0;accent-color:var(--ac)}
-html.rgb header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:linear-gradient(90deg,#f43f5e,#f59e0b,#22c55e,#06b6d4,#6366f1,#d946ef,#f43f5e);background-size:200% 100%;animation:rgbmove 4s linear infinite}
+html.rgb header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:linear-gradient(90deg,#f43f5e,#f59e0b,#22c55e,#06b6d4,#6366f1,#d946ef,#f43f5e);background-size:300% 100%;animation:rgbmove 3s linear infinite}
+html.rgb .rgb-eq{display:flex}
+html.rgb .col{position:relative;isolation:isolate;border-color:transparent;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(115deg,#f43f5e,#f59e0b,#22c55e,#06b6d4,#6366f1,#d946ef,#f43f5e) border-box;background-size:auto,300% 300%;animation:rgbframe 7s linear infinite}
+html.rgb .card{border-color:color-mix(in srgb,var(--ac) 35%,var(--bd));box-shadow:0 0 0 1px color-mix(in srgb,var(--ac) 8%,transparent),0 0 16px -10px var(--g1)}
+html.rgb .card:hover{box-shadow:0 0 0 1px var(--g1),0 0 22px -7px var(--g2),0 10px 24px -10px rgba(15,27,45,.28)}
+html.rgb .bar i{background:linear-gradient(90deg,#f43f5e,#f59e0b,#22c55e,#06b6d4,#6366f1,#d946ef);background-size:250% 100%;animation:rgbmove 2.5s linear infinite}
+html.rgb .rec{border-color:color-mix(in srgb,var(--g1) 45%,var(--bd));box-shadow:0 0 22px -14px var(--g1),var(--sh)}
+@keyframes rgbframe{0%{background-position:0 0,0% 50%}100%{background-position:0 0,300% 50%}}
 html.rgb .col>h2{border-top-color:transparent;background-image:linear-gradient(90deg,#f43f5e,#f59e0b,#22c55e,#06b6d4,#6366f1,#d946ef,#f43f5e);background-size:200% 3px;background-position:0 0;animation:rgbmove 4s linear infinite}
 html.rgb .btn,html.rgb h1::before,html.rgb .rec-i{animation:rgbhue 6s linear infinite}
 @keyframes rgbmove{to{background-position:200% 0}}@keyframes rgbhue{to{filter:hue-rotate(360deg)}}
@@ -119,22 +131,170 @@ dialog input,dialog select{border-radius:12px}
 .auth-btn{font-size:.78rem;padding:8px 12px;min-height:38px;white-space:nowrap}
 @media(max-width:899px){.auth-area{max-width:none;gap:5px}.sync-status{font-size:.68rem}.auth-btn{font-size:.72rem;padding:7px 9px;min-height:36px}}
 @media(max-width:480px){.auth-area{flex-basis:100%;justify-content:flex-end;margin-top:4px}.top{flex-wrap:wrap}.top h1{flex:1 1 55%}.auth-area{order:5}}
+
+
+/* Signature premium dashboard redesign */
+:root{--bg:#f4f6fb;--card:#ffffff;--tx:#172033;--mu:#778198;--bd:#e3e8f2;--ac:#6558f5;--ac2:#08b8c8;--sh:0 18px 48px -32px rgba(23,32,51,.32)}
+:root[data-theme="dark"]{--bg:#080b14;--card:#101522;--tx:#f1f4fc;--mu:#929bb0;--bd:#242b3c;--ac:#8b7cff;--ac2:#28d8e4;--sh:0 20px 55px -28px rgba(0,0,0,.85)}
+html{background:var(--bg)}
+body{position:relative;isolation:isolate;background:radial-gradient(ellipse at 8% 0%,color-mix(in srgb,var(--ac) 17%,transparent),transparent 34rem),radial-gradient(ellipse at 96% 8%,color-mix(in srgb,var(--ac2) 12%,transparent),transparent 30rem),var(--bg);letter-spacing:-.012em}
+body:before{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;opacity:.22;background-image:radial-gradient(color-mix(in srgb,var(--mu) 24%,transparent) .7px,transparent .7px);background-size:18px 18px;mask-image:linear-gradient(to bottom,#000,transparent 72%)}
+header{padding:20px 28px 13px;background:color-mix(in srgb,var(--bg) 76%,transparent);border-bottom:1px solid color-mix(in srgb,var(--bd) 70%,transparent);box-shadow:0 10px 35px -32px rgba(0,0,0,.6)}
+.top,.stats,.tabs{max-width:1360px}
+.top{gap:14px}
+h1{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:1.18rem;font-weight:800;letter-spacing:-.055em;line-height:1.2}
+h1::before{width:46px;height:46px;content:"✦";border-radius:16px;background:linear-gradient(145deg,#7567ff 0%,#4d8dff 48%,#20d9d2 100%);box-shadow:0 8px 28px -9px color-mix(in srgb,var(--ac) 80%,transparent),inset 0 1px 0 rgba(255,255,255,.45)}
+h1 small{font-size:.72rem;letter-spacing:.035em;text-transform:uppercase;font-weight:700;color:var(--mu)}
+.btn{border-radius:13px;background:linear-gradient(115deg,#7164ff,#4e87ff 58%,#16bfc8);box-shadow:0 8px 22px -12px #6558f5,inset 0 1px 0 rgba(255,255,255,.25);font-size:.88rem;letter-spacing:-.01em;transition:transform .2s,box-shadow .2s,filter .2s}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.06);box-shadow:0 12px 28px -12px #6558f5}
+.ghost{border-radius:13px;border-color:var(--bd);background:color-mix(in srgb,var(--card) 78%,transparent);transition:transform .2s,border-color .2s,background .2s}
+.ghost:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--ac) 50%,var(--bd));background:color-mix(in srgb,var(--ac) 8%,var(--card))}
+.stats{gap:13px;margin-top:13px;font-size:.77rem;font-weight:700;letter-spacing:.01em}
+.bar{height:6px;background:color-mix(in srgb,var(--bd) 75%,transparent);border-radius:999px}
+.bar i{border-radius:999px;background:linear-gradient(90deg,#7b6dff,#4b91ff,#20d8cc)}
+main{max-width:1360px;padding:25px 28px 34px;gap:0}
+.rec{padding:25px 27px;border-radius:25px;border:1px solid color-mix(in srgb,var(--ac) 18%,var(--bd));background:linear-gradient(115deg,color-mix(in srgb,var(--ac) 11%,var(--card)),color-mix(in srgb,var(--ac2) 7%,var(--card)) 58%,var(--card));box-shadow:0 20px 48px -36px color-mix(in srgb,var(--ac) 55%,transparent);margin-bottom:20px}
+.rec:after{width:260px;height:260px;right:-45px;top:-145px;opacity:.12;filter:blur(2px)}
+.rec-i{width:52px;height:52px;border-radius:17px;background:linear-gradient(145deg,#7468ff,#23c7d5);box-shadow:0 12px 28px -14px var(--ac)}
+.rec h2{font-family:"Plus Jakarta Sans",sans-serif;font-size:1.18rem;font-weight:800;letter-spacing:-.04em}
+.rec p{font-size:.9rem;line-height:1.7}
+.chip{border-radius:10px;border:1px solid color-mix(in srgb,var(--ac) 18%,var(--bd));border-left:1px solid color-mix(in srgb,var(--ac) 30%,var(--bd));background:color-mix(in srgb,var(--card) 85%,transparent);padding:5px 10px;font-size:.75rem}
+.toolbar{gap:9px;margin-bottom:20px;padding:10px;border:1px solid var(--bd);border-radius:18px;background:color-mix(in srgb,var(--card) 83%,transparent);box-shadow:0 12px 32px -27px rgba(0,0,0,.55);backdrop-filter:blur(16px)}
+.toolbar input,.toolbar select{border-radius:12px;background:color-mix(in srgb,var(--bg) 72%,var(--card));border-color:var(--bd);font-size:.82rem;transition:border-color .2s,box-shadow .2s}
+.toolbar input:focus,.toolbar select:focus{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 13%,transparent);outline:none}
+.toolbar .toolbtn{font-size:.79rem;font-weight:700}
+.results-note{font-size:.72rem}
+.board{gap:18px}
+.col{position:relative;border-radius:22px;background:color-mix(in srgb,var(--card) 78%,transparent);border:1px solid var(--bd);box-shadow:0 20px 42px -34px rgba(0,0,0,.52);backdrop-filter:blur(14px);transition:transform .24s,border-color .24s,box-shadow .24s}
+.col:hover{border-color:color-mix(in srgb,var(--ac) 26%,var(--bd));box-shadow:0 24px 48px -34px color-mix(in srgb,var(--ac) 32%,transparent)}
+.col>h2{padding:18px 19px;font-family:"Plus Jakarta Sans",sans-serif;font-size:.91rem;font-weight:800;letter-spacing:-.025em;background-color:color-mix(in srgb,var(--card) 90%,var(--bg));background-image:linear-gradient(90deg,var(--ac),var(--ac2));background-size:100% 2px}
+.col.p>h2{border-top-color:#ffb454}.col.c>h2{border-top-color:#35d3a0}
+.col h2 .n{font-size:.72rem;padding:4px 9px;border:1px solid var(--bd);background:color-mix(in srgb,var(--bg) 65%,var(--card))}
+.list{padding:13px;gap:11px}
+.card{position:relative;gap:10px;border:1px solid var(--bd);border-left:3px solid color-mix(in srgb,var(--ac) 55%,var(--bd));border-radius:15px;padding:15px 10px 15px 14px;background:linear-gradient(145deg,color-mix(in srgb,var(--card) 97%,var(--ac)),var(--card) 70%);box-shadow:0 5px 15px -13px rgba(0,0,0,.55);transition:transform .22s,border-color .22s,box-shadow .22s}
+.card:hover{transform:translateY(-2px);box-shadow:0 14px 26px -20px color-mix(in srgb,var(--ac) 60%,transparent);border-color:color-mix(in srgb,var(--ac) 28%,var(--bd))}
+.card.High{border-left-color:#ff617c}.card.Medium{border-left-color:#ffbd59}.card.Low{border-left-color:#42d6ae}
+.ti{font-size:.86rem;font-weight:700;letter-spacing:-.02em;line-height:1.5}
+.meta{font-size:.69rem;gap:5px;margin-top:8px}
+.pill{font-size:.68rem;border-radius:8px;padding:3px 7px;background:color-mix(in srgb,var(--bg) 75%,var(--card));border-color:var(--bd)}
+.pill.High{background:color-mix(in srgb,#ff617c 16%,var(--card));border-color:color-mix(in srgb,#ff617c 45%,var(--bd));color:color-mix(in srgb,#ff617c 78%,var(--tx))}
+.pill.Medium{background:color-mix(in srgb,#ffbd59 17%,var(--card));border-color:color-mix(in srgb,#ffbd59 45%,var(--bd));color:var(--tx)}
+.cbtn{border-radius:10px;background:linear-gradient(110deg,var(--ac),#528cff);box-shadow:0 5px 14px -10px var(--ac);font-size:.73rem;min-height:32px}
+.cbtn.ok{background:linear-gradient(110deg,#11a87e,#35d3a0)}
+.empty{border:1px dashed color-mix(in srgb,var(--mu) 35%,var(--bd));background:color-mix(in srgb,var(--card) 58%,transparent);border-radius:15px;font-size:.82rem}
+#toast{background:color-mix(in srgb,var(--card) 88%,var(--tx));color:var(--tx);border:1px solid var(--bd);box-shadow:0 18px 48px rgba(0,0,0,.24);backdrop-filter:blur(16px)}
+dialog{background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(22px);border-color:color-mix(in srgb,var(--bd) 78%,transparent);box-shadow:0 35px 100px -35px rgba(0,0,0,.75)}
+dialog h3{font-family:"Plus Jakarta Sans",sans-serif;font-size:1.2rem;font-weight:800;letter-spacing:-.04em}
+dialog input,dialog select{background:var(--bg);border-color:var(--bd)}
+.drawer{background:var(--card)}
+.rgb-eq{height:26px;gap:3px;opacity:.95;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--ac2) 38%,transparent))}
+.rgb-eq span{background:linear-gradient(180deg,#e7fdff 0%,#21d9e5 25%,#5e7bff 58%,#b05cff 82%,#ff5d9e 100%);box-shadow:0 0 10px rgba(66,210,255,.4);border-radius:3px 3px 1px 1px}
+html.rgb header{border-bottom-color:transparent}
+html.rgb header:after{height:2px;bottom:-1px;background:linear-gradient(90deg,#ff5f9e,#ffb454,#49e5b1,#31c7f6,#7c6cff,#d66cff,#ff5f9e);background-size:240% 100%;filter:drop-shadow(0 0 7px rgba(87,150,255,.45));animation:rgbmove 5s linear infinite}
+html.rgb .col{border-color:transparent;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,#ff5f9e,#ffb454,#49e5b1,#31c7f6,#7c6cff,#d66cff,#ff5f9e) border-box;background-size:auto,260% 260%;animation:rgbframe 12s linear infinite}
+html.rgb .card{border-color:color-mix(in srgb,var(--ac) 22%,var(--bd));box-shadow:0 0 16px -14px var(--ac2)}
+html.rgb .card:hover{box-shadow:0 0 0 1px color-mix(in srgb,var(--ac2) 45%,transparent),0 12px 28px -17px var(--ac2)}
+html.rgb .btn,html.rgb h1:before,html.rgb .rec-i{animation:none;box-shadow:0 8px 26px -12px var(--ac),0 0 18px -12px var(--ac2)}
+html.rgb .bar i{background:linear-gradient(90deg,#ff5f9e,#ffb454,#49e5b1,#31c7f6,#7c6cff);background-size:240% 100%;animation:rgbmove 5s linear infinite}
+@media(max-width:899px){header{padding:14px 16px 11px}main{padding:17px 16px 28px}.rec{padding:19px}.board{gap:13px}.toolbar{padding:9px}}
+@media(max-width:480px){h1{font-size:.96rem}h1:before{width:40px;height:40px;border-radius:13px}.rec{border-radius:20px}.rec h2{font-size:1.05rem}.col{border-radius:18px}.col>h2{padding:15px 15px}.list{padding:10px}.card{border-radius:13px}.toolbar{border-radius:15px}}
+@media(prefers-reduced-motion:reduce){body:before{display:none}html.rgb .col,html.rgb .bar i,html.rgb header:after{animation:none!important}}
+
 </style>
+
+<style id="premium-reference-redesign">
+:root{--bg:#101115;--card:#1b1d23;--tx:#f4f5f8;--mu:#9297a5;--bd:#2b2e37;--ac:#3988ff;--ac2:#7465ff;--wn:#f4b84a;--ok:#36d58a;--bad:#ff657a;--sh:0 18px 50px rgba(0,0,0,.24);--on:#fff;color-scheme:dark}
+:root[data-theme="dark"]{--bg:#101115;--card:#1b1d23;--tx:#f4f5f8;--mu:#9297a5;--bd:#2b2e37;--ac:#3988ff;--ac2:#7465ff;--wn:#f4b84a;--ok:#36d58a;--bad:#ff657a;--sh:0 18px 50px rgba(0,0,0,.24);--on:#fff;color-scheme:dark}
+:root[data-theme="light"]{--bg:#edf0f6;--card:#fff;--tx:#171923;--mu:#697080;--bd:#dce0e9;--ac:#2678f5;--ac2:#7565ec;--wn:#ad6c0c;--ok:#14845a;--bad:#c73550;--sh:0 14px 35px rgba(28,35,58,.09);--on:#fff;color-scheme:light}
+body{background:radial-gradient(ellipse at 85% -12%,rgba(77,95,173,.13),transparent 38%),var(--bg);color:var(--tx);font-family:'Plus Jakarta Sans',Inter,system-ui,sans-serif;letter-spacing:-.015em}
+header{position:relative;z-index:2;background:rgba(17,18,23,.92);backdrop-filter:blur(22px);border-bottom:1px solid var(--bd);padding:18px clamp(16px,3vw,42px) 0;box-shadow:0 8px 35px rgba(0,0,0,.14)}
+:root[data-theme="light"] header{background:rgba(255,255,255,.92)}
+.top{max-width:1480px;margin:auto;display:flex;gap:13px;align-items:center;flex-wrap:wrap}
+.brand-mark{height:44px;width:44px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,#3a8dff,#6555e8);font-size:24px;font-weight:800;color:#fff;box-shadow:0 8px 24px #367fff3d}
+.brand-title{display:flex;flex-direction:column;gap:3px;margin-right:auto}
+h1{font-size:19px!important;letter-spacing:-.04em;margin:0!important;line-height:1.25}
+h1 small{display:block;font-size:11px!important;color:var(--mu);font-weight:500;margin-top:5px}
+.eyebrow{font-size:9px;letter-spacing:.16em;color:var(--mu);font-weight:800}
+button,.btn,select,input{font-family:inherit}
+button,.btn{border-radius:12px;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+button:hover,.btn:hover{transform:translateY(-1px)}
+.btn{background:linear-gradient(135deg,#3988ff,#526eff);box-shadow:0 6px 18px #3988ff2b;color:#fff;border:1px solid #6da6ff50;font-weight:700}
+.ghost{background:#ffffff06;border:1px solid var(--bd);color:var(--tx)}
+.auth-area .sync-status{background:#ffffff06;border:1px solid var(--bd);padding:9px 12px;border-radius:11px;font-size:11px}
+.stats{max-width:1480px;margin:14px auto 0;padding-bottom:13px;color:var(--mu);font-size:11px}
+.bar{background:#ffffff12;border-radius:99px;overflow:hidden;height:4px;margin-top:8px}
+.bar i{background:linear-gradient(90deg,#3988ff,#7b6aff,#c16bff);border-radius:99px}
+.rgb-eq{opacity:.35;height:3px;bottom:0}
+.tabs{max-width:1480px;margin:0 auto;gap:7px;border:0;overflow-x:auto}
+.tabs button{border:0;color:var(--mu);border-radius:10px 10px 0 0;padding:13px 17px;font-size:12px;background:transparent}
+.tabs button.on{color:var(--tx);background:#ffffff08;box-shadow:inset 0 -2px #438aff}
+main{max-width:1480px;margin:0 auto;padding:26px clamp(16px,3vw,42px) 56px}
+.metric-grid{display:grid;grid-template-columns:1.15fr 1fr 1fr 1.1fr;gap:14px;margin-bottom:24px}
+.metric-card{position:relative;overflow:hidden;min-width:0;padding:20px 20px 17px;border:1px solid var(--bd);border-radius:19px;background:linear-gradient(145deg,#22242c,#191b21);box-shadow:var(--sh);min-height:136px}
+:root[data-theme="light"] .metric-card{background:linear-gradient(145deg,#fff,#f8f9fc)}
+.metric-card:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(125deg,rgba(255,255,255,.035),transparent 55%)}
+.metric-feature{background:radial-gradient(ellipse at 95% 0%,#4b62a22b,transparent 50%),linear-gradient(145deg,#252833,#1a1b22)}
+.metric-label{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--mu);display:flex;align-items:center;gap:8px}
+.metric-dot{width:6px;height:6px;border-radius:50%;background:#4b98ff;box-shadow:0 0 10px #4b98ff}
+.metric-big{font-size:34px;line-height:1.3;font-weight:750;letter-spacing:-.07em;margin-top:10px}
+.metric-big small{font-size:16px;color:var(--mu);margin-left:3px}
+.metric-foot{font-size:10px;color:var(--mu);margin-top:6px}
+.metric-blue{color:#4c99ff}.metric-green{color:#36d58a}
+.metric-icon{float:right;width:29px;height:29px;border-radius:9px;display:grid;place-items:center;color:#5ca2ff;background:#3988ff20;border:1px solid #3988ff25;font-weight:800}
+.metric-progress{height:5px;border-radius:99px;background:#ffffff12;margin-top:11px;overflow:hidden}
+.metric-progress i{display:block;width:0;height:100%;background:linear-gradient(90deg,#3988ff,#8c6bff);border-radius:99px;transition:width .5s ease}
+.metric-spark{position:absolute;right:18px;bottom:19px;display:flex;align-items:end;gap:4px;height:44px}
+.metric-spark i{width:4px;border-radius:4px;background:linear-gradient(#8c7cff,#3988ff);height:var(--h,50%);animation:spark 1.7s ease-in-out infinite alternate;animation-delay:var(--d,0s)}
+.metric-spark i:nth-child(2n){--h:82%;--d:-.6s}.metric-spark i:nth-child(3n){--h:35%;--d:-1s}.metric-spark i:nth-child(4n){--h:95%;--d:-.3s}.metric-spark i:nth-child(5n){--h:62%;--d:-1.3s}
+@keyframes spark{from{transform:scaleY(.45);opacity:.55}to{transform:scaleY(1);opacity:1}}
+.rec{display:flex;align-items:center;gap:16px;border:1px solid var(--bd);border-radius:18px;background:linear-gradient(115deg,#20232c,#191b21);padding:18px 20px;margin:0 0 22px;box-shadow:var(--sh)}
+:root[data-theme="light"] .rec{background:linear-gradient(115deg,#fff,#f8f9fc)}
+.rec-i{width:43px;height:43px;display:grid;place-items:center;border-radius:14px;background:#3988ff1c;font-size:20px}
+.rec h2{font-size:13px;margin:0 0 5px;font-weight:750}
+.rec p{font-size:11px;color:var(--mu);margin:0}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{background:#ffffff08;border:1px solid var(--bd);border-radius:8px;padding:5px 8px;font-size:10px}
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:17px}
+.search-wrap{flex:1;min-width:180px}
+.search-wrap input,select,input:not([type=checkbox]):not([type=radio]){background:var(--card);border:1px solid var(--bd);border-radius:11px;color:var(--tx);min-height:40px}
+.search-wrap input{width:100%;padding:0 35px}
+select{padding:0 12px;font-size:11px}
+.toolbtn{font-size:11px;padding:0 12px;min-height:39px}
+.results-note{font-size:10px;color:var(--mu);margin-left:auto}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.col{min-width:0;background:rgba(255,255,255,.025);border:1px solid var(--bd);border-radius:18px;padding:14px;min-height:220px}
+:root[data-theme="light"] .col{background:#f7f8fb}
+.col h2{display:flex;align-items:center;gap:9px;font-size:12px;letter-spacing:-.01em;margin:0 0 13px;padding:2px 2px 11px;border-bottom:1px solid var(--bd)}
+.col h2:before{content:"";width:7px;height:7px;border-radius:50%;background:#a0a4af}
+.col.p h2:before{background:#3988ff;box-shadow:0 0 10px #3988ff50}
+.col.c h2:before{background:#36d58a;box-shadow:0 0 10px #36d58a40}
+.n{margin-left:auto;background:#ffffff0b;border:1px solid var(--bd);border-radius:7px;padding:3px 7px;font-size:10px;color:var(--mu)}
+.list{display:flex;flex-direction:column;gap:11px}
+.card{background:linear-gradient(145deg,#24262e,#1c1e25);border:1px solid #ffffff0d;border-radius:15px;padding:15px;box-shadow:0 8px 20px #00000017;transition:transform .18s,border-color .18s,box-shadow .18s}.card:hover{transform:translateY(-2px);border-color:#438aff55;box-shadow:0 12px 26px #00000026}.card .ti{font-size:13px;font-weight:750;line-height:1.45;color:var(--tx)}.card .meta{color:var(--mu);font-size:10px}.card .actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.card button{font-size:10px;padding:7px 9px}.card .tag,.card .pill{border-radius:7px;font-size:9px;padding:4px 7px;border:1px solid var(--bd)}.card.done{opacity:.88}:root[data-theme="light"] .card{background:linear-gradient(145deg,#fff,#f8f9fc)}
+dialog{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:22px;box-shadow:0 25px 100px #0009}
+dialog::backdrop{background:#05060ac9;backdrop-filter:blur(8px)}
+.fab{background:linear-gradient(135deg,#3988ff,#695cff);box-shadow:0 8px 30px #3988ff40}
+#toast{border:1px solid var(--bd);background:var(--card);box-shadow:var(--sh);border-radius:13px}
+:root[data-rgb="on"] .col{position:relative;isolation:isolate}
+:root[data-rgb="on"] .col:before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:linear-gradient(120deg,#3988ff,#8d5cff,#f05acb,#42d9d0,#3988ff);background-size:300% 300%;animation:rgbflow 8s linear infinite;z-index:-1;opacity:.72;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;pointer-events:none}
+@keyframes rgbflow{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+@media(max-width:1000px){.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.board{grid-template-columns:1fr}.col{min-height:120px}}
+@media(max-width:620px){header{padding:13px 14px 0}.brand-mark{width:38px;height:38px}.brand-title h1{font-size:16px!important}.auth-area{width:100%;order:5}.auth-area .sync-status{display:block}.metric-grid{gap:9px}.metric-card{padding:14px;min-height:120px;border-radius:15px}.metric-big{font-size:28px}.metric-spark{right:10px;bottom:14px}.metric-spark i{width:3px}.toolbar{gap:7px}.results-note{width:100%;margin-left:0}.rec{padding:14px}.col{padding:11px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
+
 </head>
 <body>
 <header>
   <div class="top">
-    <h1>My Personal Task Assistant<small id="date"></small></h1>
+    <div class="brand-mark">Q.</div><div class="brand-title"><h1>My Workspace<small id="date"></small></h1><span class="eyebrow">PERSONAL PRODUCTIVITY</span></div>
     <button class="btn hide-m" id="add">+ Add task</button>
     <button class="ghost" id="palBtn" aria-label="Open theme panel">🎨</button>
     <button class="ghost" id="theme" aria-label="Switch light or dark theme">🌓</button>
-    <div class="auth-area" id="authArea">
-      <span class="sync-status" id="syncStatus" role="status">Local only</span>
-      <button class="btn auth-btn" id="signInBtn" type="button">Sign in with Google</button>
-      <button class="ghost auth-btn" id="signOutBtn" type="button" hidden>Sign out</button>
-    </div>
+    <div class="auth-area"><span class="sync-status" id="syncStatus" role="status">Local storage · This device only</span></div>
   </div>
   <div class="stats"><span id="st">0 of 0 done today</span><div class="bar"><i id="pb"></i></div></div>
+  <div class="rgb-eq" aria-hidden="true"><span style="animation-delay:-0.00s"></span><span style="animation-delay:-0.09s"></span><span style="animation-delay:-0.18s"></span><span style="animation-delay:-0.27s"></span><span style="animation-delay:-0.36s"></span><span style="animation-delay:-0.45s"></span><span style="animation-delay:-0.54s"></span><span style="animation-delay:-0.63s"></span><span style="animation-delay:-0.72s"></span><span style="animation-delay:-0.81s"></span><span style="animation-delay:-0.90s"></span><span style="animation-delay:-0.99s"></span><span style="animation-delay:-1.08s"></span><span style="animation-delay:-1.17s"></span><span style="animation-delay:-1.26s"></span><span style="animation-delay:-1.35s"></span><span style="animation-delay:-1.44s"></span><span style="animation-delay:-1.53s"></span><span style="animation-delay:-1.62s"></span><span style="animation-delay:-1.71s"></span><span style="animation-delay:-1.80s"></span><span style="animation-delay:-1.89s"></span><span style="animation-delay:-1.98s"></span><span style="animation-delay:-2.07s"></span><span style="animation-delay:-2.16s"></span><span style="animation-delay:-2.25s"></span><span style="animation-delay:-2.34s"></span><span style="animation-delay:-2.43s"></span><span style="animation-delay:-2.52s"></span><span style="animation-delay:-2.61s"></span><span style="animation-delay:-2.70s"></span><span style="animation-delay:-2.79s"></span><span style="animation-delay:-2.88s"></span><span style="animation-delay:-2.97s"></span><span style="animation-delay:-3.06s"></span><span style="animation-delay:-3.15s"></span><span style="animation-delay:-3.24s"></span><span style="animation-delay:-3.33s"></span><span style="animation-delay:-3.42s"></span><span style="animation-delay:-3.51s"></span><span style="animation-delay:-3.60s"></span><span style="animation-delay:-3.69s"></span></div>
   <nav class="tabs" aria-label="Columns">
     <button data-t="t" class="on">Task List <span id="tn1"></span></button>
     <button data-t="p">Pending <span id="tn2"></span></button>
@@ -143,6 +303,12 @@ dialog input,dialog select{border-radius:12px}
 </header>
 
 <main>
+  <section class="metric-grid" aria-label="Task overview">
+    <article class="metric-card metric-feature"><div class="metric-label">YOUR WORKSPACE <span class="metric-dot"></span></div><div class="metric-big" id="mTotal">0</div><div class="metric-foot">Tasks in your personal board</div><div class="metric-spark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+    <article class="metric-card"><div class="metric-icon">✦</div><div class="metric-label">PENDING TASKS</div><div class="metric-big" id="mPending">0</div><div class="metric-foot"><span class="metric-blue">●</span> Ready for your focus</div></article>
+    <article class="metric-card"><div class="metric-icon">✓</div><div class="metric-label">COMPLETED</div><div class="metric-big" id="mCompleted">0</div><div class="metric-foot"><span class="metric-green">●</span> Wins collected</div></article>
+    <article class="metric-card"><div class="metric-icon">↗</div><div class="metric-label">COMPLETION RATE</div><div class="metric-big"><span id="mRate">0</span><small>%</small></div><div class="metric-progress"><i id="mRateBar"></i></div><div class="metric-foot"><span id="mDoneToday">0 completed today</span></div></article>
+  </section>
   <section class="rec" aria-live="polite">
     <div class="rec-i" aria-hidden="true">🎯</div>
     <div class="rec-b"><h2>Today’s focus</h2><p id="recMsg">Choose one important task and begin.</p><div class="chips" id="recChips"></div></div>
@@ -210,9 +376,6 @@ dialog input,dialog select{border-radius:12px}
 </dialog>
 <div id="toast" role="status"></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 "use strict";
 const K="tm.tasks", TK="tm.theme", PK="tm.palette", RK="tm.rgb";
@@ -240,21 +403,7 @@ let searchQuery="",categoryFilter="all",sortMode="smart";
 
 function normalizeTask(t){return {id:String(t.id||uid()),title:String(t.title||"").trim().slice(0,100),priority:PR[t.priority]===undefined?"Medium":t.priority,category:CATEGORIES[t.category]?t.category:"other",dueDate:typeof t.dueDate==="string"?t.dueDate:"",done:!!t.done,createdAt:Number(t.createdAt)||Date.now(),completedAt:Number(t.completedAt)||null}}
 function load(){try{const a=JSON.parse(localStorage.getItem(K)||"[]");return Array.isArray(a)?a.filter(t=>t&&t.id&&typeof t.title==="string").map(normalizeTask):[]}catch(e){return[]}}
-let firebaseApp=null,auth=null,db=null,currentUser=null,unsubscribeTasks=null,cloudReady=false,cloudApplying=false;
-let lastCloudTasks=new Map(),syncQueue=Promise.resolve();
-const firebaseConfig={apiKey:"PASTE_YOUR_FIREBASE_API_KEY",authDomain:"YOUR_PROJECT_ID.firebaseapp.com",projectId:"YOUR_PROJECT_ID",appId:"PASTE_YOUR_FIREBASE_APP_ID"};
-function firebaseIsConfigured(){return !!firebaseConfig.apiKey&&!firebaseConfig.apiKey.includes("PASTE_")&&!!firebaseConfig.appId&&!firebaseConfig.appId.includes("PASTE_")&&!!firebaseConfig.projectId&&!firebaseConfig.projectId.includes("YOUR_")&&!!firebaseConfig.authDomain&&!firebaseConfig.authDomain.includes("YOUR_")}
-function updateSyncStatus(text,state="local"){const node=$("syncStatus");node.textContent=text;node.dataset.state=state}
-function updateAuthUi(){const signedIn=!!currentUser;$("signInBtn").hidden=signedIn;$("signOutBtn").hidden=!signedIn;if(signedIn)updateSyncStatus(cloudReady?"Synced · "+(currentUser.displayName||currentUser.email||"Google account"):"Connecting…",cloudReady?"synced":"local");else if(!firebaseIsConfigured())updateSyncStatus("Setup required","error");else updateSyncStatus("Not signed in","local")}
-function save(){try{localStorage.setItem(K,JSON.stringify(tasks));if(currentUser&&cloudReady&&!cloudApplying){const uid=currentUser.uid;syncQueue=syncQueue.then(()=>syncCloudDiff(uid)).catch(err=>{console.error("Firestore sync failed",err);updateSyncStatus("Sync error","error");toast("Cloud sync failed. Check your connection and Firebase setup.")})}return true}catch(e){toast("Unable to save tasks in browser storage.");return false}}
-function cloudTaskData(t){return {title:t.title,priority:t.priority,category:t.category,dueDate:t.dueDate||"",done:!!t.done,createdAt:Number(t.createdAt)||Date.now(),completedAt:Number(t.completedAt)||null,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}}
-function tasksRef(uid){return db.collection("users").doc(uid).collection("tasks")}
-async function syncCloudDiff(uid){if(!currentUser||currentUser.uid!==uid||!cloudReady||!db)return;const desired=new Map(tasks.map(t=>[String(t.id),normalizeTask(t)]));const ref=tasksRef(uid);const batch=db.batch();let writes=0;for(const [id,t] of desired){const previous=lastCloudTasks.get(id);if(!previous||JSON.stringify(previous)!==JSON.stringify(t)){batch.set(ref.doc(id),cloudTaskData(t));writes++}}for(const id of lastCloudTasks.keys()){if(!desired.has(id)){batch.delete(ref.doc(id));writes++}}if(!writes)return;await batch.commit()}
-async function migrateLocalTasksOnce(user){const marker="tm.firebaseMigrated."+user.uid;if(localStorage.getItem(marker)==="1")return;const ref=tasksRef(user.uid);const snap=await ref.get();const remoteIds=new Set(snap.docs.map(d=>d.id));const local=tasks.map(normalizeTask).filter(t=>!remoteIds.has(t.id));for(let i=0;i<local.length;i+=400){const batch=db.batch();local.slice(i,i+400).forEach(t=>batch.set(ref.doc(t.id),cloudTaskData(t)));await batch.commit()}localStorage.setItem(marker,"1")}
-async function connectUser(user){if(unsubscribeTasks){unsubscribeTasks();unsubscribeTasks=null}currentUser=user;cloudReady=false;lastCloudTasks=new Map();updateAuthUi();try{await migrateLocalTasksOnce(user);if(!currentUser||currentUser.uid!==user.uid)return;unsubscribeTasks=tasksRef(user.uid).onSnapshot(snapshot=>{if(!currentUser||currentUser.uid!==user.uid)return;const remote=snapshot.docs.map(d=>normalizeTask({...d.data(),id:d.id}));cloudApplying=true;tasks=remote;lastCloudTasks=new Map(remote.map(t=>[t.id,t]));try{localStorage.setItem(K,JSON.stringify(tasks))}catch(e){}cloudReady=true;render();cloudApplying=false;updateSyncStatus("Synced · "+(user.displayName||user.email||"Google account"),"synced")},err=>{console.error("Firestore listener failed",err);cloudReady=false;updateSyncStatus("Sync error","error");toast("Could not read cloud tasks. Check Firestore rules.")})}catch(err){console.error("Firebase connection failed",err);cloudReady=false;updateSyncStatus("Connection error","error");toast("Firebase setup or connection failed. Check the setup guide and console.")}}
-async function signInGoogle(){if(!firebaseIsConfigured()){updateSyncStatus("Setup required","error");toast("Add your Firebase web config to this HTML file first.");return}try{const provider=new firebase.auth.GoogleAuthProvider();provider.setCustomParameters({prompt:"select_account"});await auth.signInWithPopup(provider)}catch(err){if(err&&["auth/popup-blocked","auth/operation-not-supported-in-this-environment"].includes(err.code)){try{await auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider())}catch(e){console.error(e);toast("Google sign-in failed: "+(e.message||e.code))}}else{console.error(err);toast("Google sign-in failed: "+(err.message||err.code||"unknown error"))}}}
-async function signOutGoogle(){if(!auth)return;try{await auth.signOut()}catch(err){console.error(err);toast("Could not sign out")}}
-function initializeFirebase(){if(!firebaseIsConfigured()){updateAuthUi();return}try{firebaseApp=firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.firestore();auth.onAuthStateChanged(user=>{if(user){connectUser(user)}else{const hadUser=!!currentUser;if(unsubscribeTasks){unsubscribeTasks();unsubscribeTasks=null}currentUser=null;cloudReady=false;lastCloudTasks=new Map();updateAuthUi();if(hadUser){tasks=[];try{localStorage.setItem(K,"[]")}catch(e){}render();toast("Signed out")}}})}catch(err){console.error("Firebase initialization failed",err);updateSyncStatus("Firebase error","error")}}
+function save(){try{localStorage.setItem(K,JSON.stringify(tasks));return true}catch(e){toast("Unable to save tasks in browser storage.");return false}}
 function pad(n){return String(n).padStart(2,"0")}
 function ymd(d=new Date()){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
 function uid(){return crypto&&crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random()}
@@ -287,7 +436,7 @@ function render(){
 
   renderList("l1",taskList,"No matching tasks. Try another search or add a task.");
   renderList("l2",pending,"No pending tasks match these filters.",true);
-  renderList("l3",completed,"No completed tasks match these filters.");
+  renderList("l3",completed,"No completed tasks match these filters.",true);
 
   $("n1").textContent=taskList.length;
   $("n2").textContent=pending.length;
@@ -297,6 +446,13 @@ function render(){
   $("tn3").textContent=" "+completed.length;
 
   const doneToday=tasks.filter(t=>t.done&&t.completedAt&&ymd(new Date(t.completedAt))===today).length;
+  const doneCount=allCompleted.length, rate=tasks.length?Math.round(doneCount/tasks.length*100):0;
+  $("mTotal").textContent=tasks.length;
+  $("mPending").textContent=allPending.length;
+  $("mCompleted").textContent=doneCount;
+  $("mRate").textContent=rate;
+  $("mRateBar").style.width=rate+"%";
+  $("mDoneToday").textContent=doneToday+" completed today";
   const total=allPending.length+doneToday;
   $("st").textContent=`${doneToday} of ${total} done today`;
   $("pb").style.width=(total?Math.round(doneToday/total*100):0)+"%";
@@ -366,7 +522,7 @@ function switchTab(tab){document.querySelectorAll(".tabs button").forEach(b=>b.c
 function openTheme(){if(!$("pal").open)$("pal").showModal()}
 function closeTheme(){$("pal").close()}
 
-$("signInBtn").addEventListener("click",signInGoogle);$("signOutBtn").addEventListener("click",signOutGoogle);
+
 $("add").addEventListener("click",()=>openDialog());$("fab").addEventListener("click",()=>openDialog());$("cx").addEventListener("click",closeDialog);$("f").addEventListener("submit",submitTask);$("clr").addEventListener("click",clearCompleted);
 $("theme").addEventListener("click",()=>applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));$("palBtn").addEventListener("click",openTheme);$("palX").addEventListener("click",closeTheme);$("palR").addEventListener("click",()=>{paletteIndex=0;rgb=hexToRgb(PALETTES[0].a);rgb2=hexToRgb(PALETTES[0].b);applyPalette(PALETTES[0].a,PALETTES[0].b);buildSliders();updateSwatchSelection();setRgbGlow(false);applyTheme("light");toast("Theme reset")});$("rgbT").addEventListener("change",e=>setRgbGlow(e.target.checked));
 document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.t)));
@@ -386,24 +542,70 @@ $("exportTasks").addEventListener("click",()=>{
 });
 $("importTasksBtn").addEventListener("click",()=>$("importTasksFile").click());
 $("importTasksFile").addEventListener("change",async e=>{
-  const file=e.target.files&&e.target.files[0];if(!file)return;
+  const file=e.target.files&&e.target.files[0];
+  if(!file)return;
+
   try{
     const parsed=JSON.parse(await file.text());
-    const incoming=Array.isArray(parsed)?parsed:parsed.tasks;
-    if(!Array.isArray(incoming))throw new Error("This file doesn't contain a task list.");
-    const cleaned=incoming.filter(t=>t&&typeof t.title==="string"&&t.title.trim()).map(t=>({
-      id:typeof t.id==="string"&&t.id?t.id:uid(),title:t.title.trim().slice(0,100),
-      priority:PR[t.priority]===undefined?"Medium":t.priority,
-      category:CATEGORIES[t.category]?t.category:"other",
-      dueDate:typeof t.dueDate==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(t.dueDate)?t.dueDate:"",
-      done:!!t.done,createdAt:Number(t.createdAt)||Date.now(),completedAt:Number(t.completedAt)||null
-    }));
-    if(!confirm(`Restore ${cleaned.length} task(s)? This replaces the tasks currently saved in this browser.`))return;
-    const previous=tasks;tasks=cleaned;
-    if(!save()){tasks=previous;render();return}
-    render();toast("Backup restored");
-  }catch(err){toast("Could not restore backup. Check the JSON file.");}
-  finally{e.target.value=""}
+
+    // Support this app's exported backup and older plain-array backups.
+    let incoming;
+    if(Array.isArray(parsed)) incoming=parsed;
+    else if(parsed&&Array.isArray(parsed.tasks)) incoming=parsed.tasks;
+    else if(parsed&&parsed.data&&Array.isArray(parsed.data.tasks)) incoming=parsed.data.tasks;
+    else throw new Error("This file does not contain a supported task list.");
+
+    const cleaned=[];
+    for(const item of incoming){
+      if(!item||typeof item!=="object"||typeof item.title!=="string"||!item.title.trim())continue;
+      cleaned.push({
+        id:typeof item.id==="string"&&item.id.trim()?item.id.trim():uid(),
+        title:item.title.trim().slice(0,100),
+        priority:PR[item.priority]===undefined?"Medium":item.priority,
+        category:CATEGORIES[item.category]?item.category:"other",
+        dueDate:typeof item.dueDate==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(item.dueDate)?item.dueDate:"",
+        done:!!item.done,
+        createdAt:Number(item.createdAt)||Date.now(),
+        completedAt:Number(item.completedAt)||null
+      });
+    }
+
+    // Never allow an empty or malformed backup to silently erase existing tasks.
+    if(cleaned.length===0&&tasks.length>0){
+      throw new Error("No valid tasks were found in this backup. Your current tasks were left unchanged.");
+    }
+    if(cleaned.length===0&&!confirm("This backup contains no valid tasks. Continue?"))return;
+
+    // Remove duplicate IDs inside the backup itself.
+    const uniqueIncoming=new Map();
+    for(const task of cleaned)uniqueIncoming.set(String(task.id),task);
+    const incomingTasks=[...uniqueIncoming.values()];
+
+    // Non-destructive restore: backup tasks add/update by ID; other tasks stay.
+    const previous=tasks.map(normalizeTask);
+    const merged=new Map(previous.map(task=>[String(task.id),task]));
+    for(const task of incomingTasks)merged.set(String(task.id),normalizeTask(task));
+    const restored=[...merged.values()];
+    const previousIds=new Set(previous.map(task=>String(task.id)));
+    const added=incomingTasks.filter(task=>!previousIds.has(String(task.id))).length;
+    const updated=incomingTasks.length-added;
+
+    // Persist locally first. Roll back in-memory state if local storage fails.
+    try{
+      localStorage.setItem(K,JSON.stringify(restored));
+    }catch(storageError){
+      throw new Error("Browser storage could not save the backup. Your current task list was left unchanged.");
+    }
+    tasks=restored;
+
+    render();
+    toast(`Restore complete: ${added} added, ${updated} updated. Existing tasks were kept.`);
+  }catch(err){
+    console.error("Backup restore failed:",err);
+    toast(err&&err.message?err.message:"Restore failed. Your current task list was not intentionally cleared.");
+  }finally{
+    e.target.value="";
+  }
 });
 document.addEventListener("keydown",e=>{
   if(e.key==="/"&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)&&!$("dlg").open&&!$("pal").open){e.preventDefault();$("searchTasks").focus()}
@@ -411,9 +613,8 @@ document.addEventListener("keydown",e=>{
 });
 
 makePaletteButtons();buildSliders();
-try{const theme=localStorage.getItem(TK);applyTheme(theme==="dark"?"dark":"light",false);const p=JSON.parse(localStorage.getItem(PK)||"null");if(p&&/^#[0-9a-f]{6}$/i.test(p.a)&&/^#[0-9a-f]{6}$/i.test(p.b)){applyPalette(p.a,p.b,false);rgb=hexToRgb(p.a);rgb2=hexToRgb(p.b);buildSliders();const i=PALETTES.findIndex(x=>x.a.toLowerCase()===p.a.toLowerCase()&&x.b.toLowerCase()===p.b.toLowerCase());paletteIndex=i;updateSwatchSelection()}setRgbGlow(localStorage.getItem("tm.rgbGlow")==="1",false)}catch(e){applyTheme("light",false)}
+try{const theme=localStorage.getItem(TK);applyTheme(theme==="light"?"light":"dark",false);const p=JSON.parse(localStorage.getItem(PK)||"null");if(p&&/^#[0-9a-f]{6}$/i.test(p.a)&&/^#[0-9a-f]{6}$/i.test(p.b)){applyPalette(p.a,p.b,false);rgb=hexToRgb(p.a);rgb2=hexToRgb(p.b);buildSliders();const i=PALETTES.findIndex(x=>x.a.toLowerCase()===p.a.toLowerCase()&&x.b.toLowerCase()===p.b.toLowerCase());paletteIndex=i;updateSwatchSelection()}setRgbGlow(localStorage.getItem("tm.rgbGlow")==="1",false)}catch(e){applyTheme("dark",false)}
 render();
-initializeFirebase();
 </script>
 </body>
 </html>
